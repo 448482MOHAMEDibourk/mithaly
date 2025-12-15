@@ -153,7 +153,33 @@ class BuildEngine:
         if isinstance(step.get('env'), dict):
             env.update(step.get('env'))
 
-        print(f"⏳ Running: {cmd}")
+            # If this step is running tests via pytest and the project has no tests folder,
+            # optionally skip the step to avoid failing builds for projects that don't include tests.
+            try:
+                from pathlib import Path as _Path
+                # Make skip behavior configurable via environment variable.
+                skip_env = os.environ.get('SKIP_TESTS_IF_EMPTY', 'true').lower()
+                skip_if_empty = skip_env in ('1', 'true', 'yes')
+
+                tests_path = _Path(self.project_path) / 'tests'
+                # Detect pytest invocations robustly (cmd string or tokenized parts)
+                is_pytest = False
+                try:
+                    is_pytest = 'pytest' in cmd or any('pytest' in str(p) for p in (parts or []))
+                except Exception:
+                    is_pytest = 'pytest' in cmd
+
+                if skip_if_empty and is_pytest and not tests_path.exists():
+                    msg = f"No tests found at {tests_path}; skipping test step (SKIP_TESTS_IF_EMPTY={skip_env})"
+                    print('WARN:', msg)
+                    if self.comm_hub:
+                        self.comm_hub.publish('build.warning', {'message': msg, 'project': self.project_path})
+                    return None
+            except Exception:
+                # If anything goes wrong while checking for tests, fall back to running the step.
+                pass
+
+            print(f"⏳ Running: {cmd}")
         try:
             proc = subprocess.run(
                 cmd,
