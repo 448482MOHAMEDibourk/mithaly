@@ -1,11 +1,19 @@
-{
-  "directive_id": "strategic-2025-12-14-001",
-  "timestamp": "2025-12-14T10:00:00Z",
-  "adopted_plan_source": "/home/eburk/Documents/mithaly/project_management/archive/14.12.2025",
+    ]
+  },
+  "next_task": "Apply 3-step execution plan (dry-run): 1) Verification & Snapshot, 2) Generate 3-step actionable plan, 3) Prepare smoke pre-exec. Confirm before any external model execute.",
+  "last_reviewed": "2025-12-15T12:00:00Z",
   "adopted_timestamp": "2025-12-14T16:00:00Z",
-  "last_action": "ran_i_project_smoke_tests",
+  "last_action": {
+    "timestamp": "2025-12-23T16:10:00Z",
+    "description": "Applied protocol.pr.md plan to context (dry-run): added plan summary to AGENT_CONTEXT and appended pre/post entries to CONTEXT_LOG.jsonl.",
+    "purpose": "Record application of 3-step plan in dry-run mode; no external model calls executed.",
+    "files_touched": [
+      "project_management/agents/CONTEXT_LOG.jsonl",
+      "project_management/agents/AGENT_CONTEXT.json"
+    ]
+  },
   "last_diagnosis_time": "2025-12-22T03:58:15.062737Z",
-  "last_updated": "2025-12-22T13:21:00Z",
+  "last_updated": "2025-12-22T17:55:20Z",
   "context_summary_ar": "الهدف: إنتاج مشاريع قابلة للتشغيل والنشر في `OUTPUT/` انطلاقاً من المواصفات في `INPUT/`. المتطلبات تتضمن توثيق مرجعي (GOALS.md, STATE.json)، سجل توجيه pre/post، مهام قابلة للتنفيذ في `project_management/tasks/`، تكامل DebuggerSpecialist ودمجه في المحرك، قابلية تشغيل محلية (PYTHONPATH/venv وتثبيت تبعيات)، آليات اختبار (dry-run وpytest)، وآلية تصحيح آلي آمن في sandbox.",
   "requirements": [
     "وجود وموثوقية `project_management/GOALS.md` و`project_management/config/STATE.json`",
@@ -53,9 +61,15 @@
       "اضمن أن أي استدعاءات تلقائية للنماذج تعمل داخل sandbox أو dry-run قبل تطبيق تغييرات منتجة."
     ]
   },
-  "next_task": "انتظار تعليمات المستخدم: هل تريد تشغيل اختبارات الفحص (smoke_ollama, smoke_aider, test_ollama_semaphore) أم متابعة إجراءات أخرى (مثل دمج بيانات `user/`)؟",
+  "next_task": "انتظار تعليمات المستخدم: أكد الخطوة التالية (تشغيل smoke tests أو تشغيل learning dry-run أو إجراء آخر).",
   "last_reviewed": "2025-12-15T12:00:00Z",
   "recent_edits": [
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md plan pre/post 2025-12-23T16:10)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended smoke_ollama pre/post 2025-12-22T17:43)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md pre 2025-12-22T17:42:28+01:00)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md post 2025-12-22T17:42:29+01:00)",
+    "project_management/agents/AGENT_CONTEXT.json (updated 2025-12-22T17:42:29+01:00)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md pre/post 2025-12-22T16:30)",
     "project_management/agents/CONTEXT_LOG.jsonl (appended i-project smoke pre/post 2025-12-22T16:17)",
     "project_management/agents/AGENT_CONTEXT.json (updated 2025-12-22T16:17)",
     "project_management/agents/CONTEXT_LOG.jsonl (appended dry-run pre/post 2025-12-22T15:12)",
@@ -128,6 +142,34 @@
     }
   ],
   "recent_runs": [
+    {
+      "name": "smoke_aider.py",
+      "path": "data/experience/i-project/scripts/smoke_aider.py",
+      "timestamp": "2025-12-22T17:55:20Z",
+      "result": "success",
+      "summary": "Basic Aider smoke checks passed (run 2025-12-22). Output: [aider smoke] OK — basic checks passed"
+    },
+    {
+      "name": "smoke_ollama.py",
+      "path": "data/experience/i-project/scripts/smoke_ollama.py",
+      "timestamp": "2025-12-22T17:47:20Z",
+      "result": "success",
+      "summary": "Basic Ollama smoke checks passed after repairing rules/architecture_rules.json. Output: [ollama smoke] OK — basic checks passed"
+    },
+    {
+      "name": "test_ollama_semaphore.py",
+      "path": "data/experience/i-project/scripts/test_ollama_semaphore.py",
+      "timestamp": "2025-12-22T17:58:06Z",
+      "result": "partial_success",
+      "summary": "Semaphore enforced concurrency: worker1 succeeded (~5s), workers 2-3 timed out (3s) and returned None."
+    },
+    {
+      "name": "smoke_ollama.py",
+      "path": "data/experience/i-project/scripts/smoke_ollama.py",
+      "timestamp": "2025-12-22T17:43:20Z",
+      "result": "failure",
+      "summary": "Failed: JSONDecodeError reading rules file (Extra data at line 10 column 1). See CONTEXT_LOG entry for details."
+    },
     {
       "name": "smoke_ollama.py",
       "path": "data/experience/i-project/scripts/smoke_ollama.py",
