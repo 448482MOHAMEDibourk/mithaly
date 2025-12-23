@@ -328,4 +328,11 @@
     "deadline_suggestion": "ابدأ فوراً وقدم تقرير تقدم خلال 24 ساعة أو عند حدوث عائق يحتاج قرار المستخدم.",
     "archive_reference": "/home/eburk/Documents/mithaly/project_management/archive/14.12.2025"
   }
+  ,
+  "project_blueprint": {
+    "path": "project_management/Project Blueprint/PROJECT_BLUEPRINT.md",
+    "added": "2025-12-23T12:00:00Z",
+    "summary": "Canonical project blueprint (Arabic) for AI agent and developers.",
+    "verified": "2025-12-23T16:30:00Z"
+  }
 }
