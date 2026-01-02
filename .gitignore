@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+**/venv/
+**/.venv/
+
+# Raw artifacts and backups
+Raw_Artifact/
+backup/
+
+# Tools output
+tools/scripts/duplicates.json
+
+# OS
+.DS_Store
+thumbs.db
