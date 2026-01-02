@@ -7,25 +7,25 @@
 
 1.  **قراءة البيان التأسيسي**
     ```bash
-    اقرأ: project_management/agents/CONTEXT_MANIFEST.md
+    اقرأ: mithaly_management/agents/CONTEXT_MANIFEST.md
     الغرض: فهم القواعد الأساسية والحدود النظامية
     ```
 
 2.  **تحميل السياق والذاكرة**
     ```bash
-    اقرأ: project_management/agents/AGENT_CONTEXT.json
+    اقرأ: mithaly_management/agents/AGENT_CONTEXT.json
     الغرض: معرفة آخر حالة، الإجراءات السابقة، الدروس المستفادة
     ```
 
 3.  **فهم الأهداف الاستراتيجية**
     ```bash
-    اقرأ: project_management/GOALS.md
+    اقرأ: mithaly_management/GOALS.md
     الغرض: توجيه جميع القرارات نحو الهدف النهائي
     ```
 
 4.  **فحص الحالة الفنية**
     ```bash
-    اقرأ: project_management/config/STATE.json (إن وجد)
+    اقرأ: mithaly_management/config/STATE.json (إن وجد)
     الغرض: معرفة الوضع الحالي للنظام والتكوين
     ```
 
@@ -50,7 +50,7 @@
 3. البحث في المجلدات الشائعة:
    - scripts/           (للنصوص البرمجية)
    - tools/             (للأدوات المساعدة)
-   - project_management/ (لإدارة المشروع)
+   - mithaly_management/ (لإدارة المشروع)
    - knowledge/         (للمعرفة المخزنة)
 4. إذا وجد ملف مشابه:
    - قيم ما إذا كان يمكن تعديله بدلاً من إنشاء جديد
@@ -95,13 +95,13 @@
 
 قاعدة "الأرشفة قبل الإزالة":
 عند استبدال ملف رئيسي:
-1. أنشئ نسخة أرشيفية في: project_management/archive/YYYY-MM-DD/
+1. أنشئ نسخة أرشيفية في: mithaly_management/archive/YYYY-MM-DD/
 2. احتفظ بالملف القديم لمدة 7 أيام على الأقل
 3. أضف تعليق في الملف الجديد يشير إلى الملف السابق
 
 مثال عملي:
 # بدلاً من حذف config_old.py
-mv config_old.py project_management/archive/$(date +%Y-%m-%d)/
+mv config_old.py mithaly_management/archive/$(date +%Y-%m-%d)/
 echo "# تم استبدال config_old.py في $(date)" >> config_new.py
 ```
 
@@ -193,7 +193,7 @@ echo "# تم استبدال config_old.py في $(date)" >> config_new.py
 **الخطوة 2: البحث في السياق التاريخي**
 ```bash
 # استفد من الدروس السابقة
-1. انتقل إلى: project_management/archive/14.12.2025/
+1. انتقل إلى: mithaly_management/archive/14.12.2025/
 2. اقرأ walkthrough.md لفهم القرارات التاريخية
 3. ابحث عن حالات مشابهة في السجلات
 4. استخرج الدروس المستفادة سابقاً
@@ -241,9 +241,9 @@ echo "# تم استبدال config_old.py في $(date)" >> config_new.py
 # برنامج استعادة سريع عند التعطل الكامل
 1. cd /home/eburk/Documents/mithaly
 2. source .venv/bin/activate
-3. cat project_management/GOALS.md | head -5  # تذكير سريع بالأهداف
-4. tail -20 project_management/agents/CONTEXT_LOG.jsonl  # آخر الإجراءات
-5. python -c "import json; print(json.dumps(json.load(open('project_management/agents/AGENT_CONTEXT.json')), indent=2))"  # الحالة الحالية
+3. cat mithaly_management/GOALS.md | head -5  # تذكير سريع بالأهداف
+4. tail -20 mithaly_management/agents/CONTEXT_LOG.jsonl  # آخر الإجراءات
+5. python -c "import json; print(json.dumps(json.load(open('mithaly_management/agents/AGENT_CONTEXT.json')), indent=2))"  # الحالة الحالية
 ```
 
 ---

@@ -1,4 +1,4 @@
-"""Routers package for project_management.api"""
+"""Routers package for mithaly_management.api"""
 
 from . import users
 

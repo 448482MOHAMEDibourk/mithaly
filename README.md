@@ -28,12 +28,17 @@ User-contributed knowledge
 
 Project Blueprint
 -----------------
-- **Arabic canonical blueprint**: `project_management/Project Blueprint/PROJECT_BLUEPRINT.md`
-- **English translation**: `project_management/Project Blueprint/PROJECT_BLUEPRINT_EN.md`
+- **Arabic canonical blueprint**: `mithaly_management/Project Blueprint/PROJECT_BLUEPRINT.md`
+- **English translation**: `mithaly_management/Project Blueprint/PROJECT_BLUEPRINT_EN.md`
 
 These files provide a single-source engineering overview and guidance for the AI Agent. Please review them before running agent-driven tasks.
 
+Mithaly Architectural Blueprint
+--------------------------------
+- The consolidated architecture documentation and short-form identity are now also available in `mithaly_blueprint/`.
+- Start with `mithaly_blueprint/01_identity/tech_stack.md` and `mithaly_blueprint/02_decisions/0001-blueprint-adoption.md` for the project's canonical tech summary and adoption decision.
+
 Agent Context
 -------------
-- `project_management/agents/AGENT_CONTEXT.json` now includes a `project_blueprint` pointer referencing the canonical blueprint file.
+- `mithaly_management/agents/AGENT_CONTEXT.json` now includes a `project_blueprint` pointer referencing the canonical blueprint file.
 	This helps agents discover the blueprint automatically.

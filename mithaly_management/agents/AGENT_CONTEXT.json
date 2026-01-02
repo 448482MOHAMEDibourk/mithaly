@@ -10,6 +10,16 @@
   "capabilities": [
     "DebuggerSpecialist"
   ],
-  "last_updated": "2025-12-24T00:00:00Z",
+  "capabilities": [
+    "DebuggerSpecialist",
+    "GovernanceAgent"
+  ],
+  "governance": {
+    "active": true,
+    "source": "mithaly_management/gg.agent.md",
+    "activated_at": "2025-12-24T08:15:00Z",
+    "notes": "Mithaly Governance Charter activated in candidate context. Review and approve to promote to active context."
+  },
+  "last_updated": "2025-12-24T08:15:00Z",
   "note": "Explicit technical decision: standardize documentation and agents on FastAPI to avoid future Node.js suggestions. This is a candidate file — review before replacing active AGENT_CONTEXT.json."
 }

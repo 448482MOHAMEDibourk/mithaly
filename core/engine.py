@@ -31,10 +31,34 @@ class BuildEngine:
         self.specialists = {}
         # Register default specialists
         self.register_specialist('debugger', DebuggerSpecialist())
+        # Safe coordinator instantiation (step 1 of integration)
+        try:
+            from core.task_coordinator import TaskCoordinator
+            # provide engine reference for potential use by coordinator
+            # TaskCoordinator in this project is lightweight and accepts no required args,
+            # but we keep this pattern in case implementations expect an engine ref.
+            try:
+                self.coordinator = TaskCoordinator(engine_ref=self)
+            except TypeError:
+                # older shim may not accept engine_ref; fall back to no-arg constructor
+                self.coordinator = TaskCoordinator()
+        except Exception:
+            # If coordinator isn't available, keep backward-compatible behavior
+            self.coordinator = None
 
     def register_specialist(self, name: str, specialist):
         """Register a specialist by name."""
         self.specialists[name] = specialist
+        # If a TaskCoordinator is present, register the specialist there as well
+        try:
+            if getattr(self, 'coordinator', None) is not None and hasattr(self.coordinator, 'register'):
+                try:
+                    self.coordinator.register(name, specialist)
+                except Exception:
+                    # registration to coordinator failed; ignore to preserve backward compatibility
+                    pass
+        except Exception:
+            pass
 
     def execute(self) -> Dict:
         start = time.time()
@@ -83,11 +107,25 @@ class BuildEngine:
         if result['status'] != 'FAILED':
             result['status'] = 'SUCCESS'
 
+        # Sync final success
+        try:
+            from mithaly_management.scripts.state_manager import update_persistent_state
+            update_persistent_state('completed', result['status'], {'project': self.plan.get('project_id')})
+        except ImportError:
+            pass
+
         result['duration'] = time.time() - start
         return result
 
     def _handle_build_error(self, error: BuildError) -> bool:
         """Handle a BuildError. Returns True if error was auto-handled and a retry should be attempted."""
+        # Sync error state
+        try:
+            from mithaly_management.scripts.state_manager import update_persistent_state
+            update_persistent_state('error', 'handling', {'error': str(error)})
+        except ImportError:
+            pass
+
         # Placeholder for correction/retry/human-in-loop logic.
         try:
             if self.correction_unit:
@@ -118,11 +156,23 @@ class BuildEngine:
         if not cmd:
             return None
 
+        # Sync step start
+        try:
+            from mithaly_management.scripts.state_manager import update_persistent_state
+            update_persistent_state(self.current_phase or 'executing', 'running_step', {'command': cmd})
+        except ImportError:
+            pass
+
         timeout = step.get('timeout', 300)
 
         # check if the executable exists (first token)
         parts = shlex.split(cmd)
         exe = parts[0] if parts else None
+        # detect pytest invocation for special handling (e.g., no-tests exit code)
+        try:
+            is_pytest = 'pytest' in cmd or any('pytest' in str(p) for p in (parts or []))
+        except Exception:
+            is_pytest = 'pytest' in cmd
         if exe and shutil.which(exe) is None:
             # handle common npm case gracefully for demos
             if exe == 'npm':
@@ -199,20 +249,73 @@ class BuildEngine:
             }
 
             if proc.returncode != 0:
-                # If a debugger specialist is registered, run analysis and produce a dry-run patch
+                # Special-case: pytest returns 5 when no tests were collected.
+                # Treat this as non-fatal (acceptable) so that projects without tests
+                # don't cause the whole build to fail. This preserves stricter
+                # behavior for other failures while being permissive for empty test suites.
+                if is_pytest and proc.returncode == 5:
+                    msg = "NOTE: pytest returned code 5 (no tests collected); treating as success"
+                    print(msg)
+                    if self.comm_hub:
+                        self.comm_hub.publish('build.warning', {'message': msg, 'project': self.project_path})
+                    # consider the step completed
+                    return proc
+                # Attempt to route debug task via TaskCoordinator if available.
+                # If TaskCoordinator isn't available or routing fails, fall back
+                # to existing DebuggerSpecialist behaviour to preserve backward
+                # compatibility.
                 try:
-                    debugger = self.specialists.get('debugger')
-                    if debugger:
-                        failure_ctx = {'command': cmd, 'stdout': proc.stdout, 'stderr': proc.stderr}
-                        diagnosis = debugger.analyze_failure(failure_ctx)
-                        suggestion = debugger.suggest_patch(diagnosis)
-                        dry_apply = debugger.apply_patch(suggestion, dry_run=True)
-                        # attach debug report to the step for higher-level reporting
+                    # Prefer the BuildEngine's coordinator instance if present
+                    coordinator = getattr(self, 'coordinator', None)
+                    if coordinator is None:
+                        # Fallback: attempt to import and create a temporary coordinator
+                        try:
+                            from core.task_coordinator import TaskCoordinator
+                            try:
+                                coordinator = TaskCoordinator(engine_ref=self)
+                            except TypeError:
+                                coordinator = TaskCoordinator()
+                        except Exception:
+                            coordinator = None
+
+                    failure_ctx = {'command': cmd, 'stdout': proc.stdout, 'stderr': proc.stderr}
+
+                    routed = None
+                    if coordinator is not None:
+                        try:
+                            routed = coordinator.route_task('debug', failure_ctx, context={'project': self.project_path, 'phase': self.current_phase}, specialists=self.specialists)
+                        except Exception:
+                            routed = None
+
+                    if routed and isinstance(routed, dict):
+                        # routed expected keys: diagnosis, suggestion, dry_apply
                         step = dict(step) if step is not None else {}
-                        step.update({'_debug_report': {'diagnosis': diagnosis, 'suggestion': suggestion, 'dry_apply': dry_apply}})
+                        step.update({'_debug_report': {'diagnosis': routed.get('diagnosis'), 'suggestion': routed.get('suggestion'), 'dry_apply': routed.get('dry_apply')}})
+                    else:
+                        # Fall back to direct specialist API
+                        debugger = self.specialists.get('debugger')
+                        if debugger:
+                            try:
+                                diagnosis = debugger.analyze_failure(failure_ctx)
+                            except TypeError:
+                                diagnosis = debugger.analyze_failure(failure_ctx)
+                            suggestion = debugger.suggest_patch(diagnosis)
+                            dry_apply = debugger.apply_patch(suggestion, dry_run=True)
+                            step = dict(step) if step is not None else {}
+                            step.update({'_debug_report': {'diagnosis': diagnosis, 'suggestion': suggestion, 'dry_apply': dry_apply}})
                 except Exception:
-                    # ignore debugger failures and propagate original build error
-                    pass
+                    # ignore debugger/coordinator failures and propagate original build error
+                    try:
+                        debugger = self.specialists.get('debugger')
+                        if debugger:
+                            failure_ctx = {'command': cmd, 'stdout': proc.stdout, 'stderr': proc.stderr}
+                            diagnosis = debugger.analyze_failure(failure_ctx)
+                            suggestion = debugger.suggest_patch(diagnosis)
+                            dry_apply = debugger.apply_patch(suggestion, dry_run=True)
+                            step = dict(step) if step is not None else {}
+                            step.update({'_debug_report': {'diagnosis': diagnosis, 'suggestion': suggestion, 'dry_apply': dry_apply}})
+                    except Exception:
+                        pass
 
                 raise BuildError(f"Command failed: {cmd}\nExit: {proc.returncode}\nStderr: {proc.stderr}", step=step)
 
@@ -226,3 +329,4 @@ class BuildEngine:
             raise
         except Exception as e:
             raise BuildError(f"Error executing {cmd}: {str(e)}", step=step)
+

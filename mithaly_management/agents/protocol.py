@@ -1,13 +1,13 @@
 """
-Shim module to make `from project_management.agents import protocol` work.
+Shim module to make `from mithaly_management.agents import protocol` work.
 
 This file attempts to load the real `protocol.py` implementation from the
-`project_management/context/protocol/` folder first (preferred), and falls
-back to `project_management/archive/agents/protocol.py` if necessary.
+`mithaly_management/context/protocol/` folder first (preferred), and falls
+back to `mithaly_management/archive/agents/protocol.py` if necessary.
 
 The shim loads the target module by file path using importlib and then
 injects its attributes into this module's globals so callers can access
-the same symbols via `project_management.agents.protocol`.
+the same symbols via `mithaly_management.agents.protocol`.
 """
 from __future__ import annotations
 
@@ -24,15 +24,15 @@ _candidates = [
 _loaded = None
 for _p in _candidates:
     if _p.exists():
-        spec = importlib.util.spec_from_file_location("project_management.agents.protocol", str(_p))
+        spec = importlib.util.spec_from_file_location("mithaly_management.agents.protocol", str(_p))
         module = importlib.util.module_from_spec(spec)
         # Register under the expected name so other imports find the same module
-        sys.modules["project_management.agents.protocol"] = module
+        sys.modules["mithaly_management.agents.protocol"] = module
         try:
             spec.loader.exec_module(module)  # type: ignore[attr-defined]
         except Exception:
             # If loading fails, clean up and continue to next candidate
-            sys.modules.pop("project_management.agents.protocol", None)
+            sys.modules.pop("mithaly_management.agents.protocol", None)
             continue
         # copy public attributes into this shim module
         for _name in dir(module):
@@ -43,7 +43,7 @@ for _p in _candidates:
 
 if _loaded is None:
     raise ImportError(
-        "Could not locate protocol implementation in project_management/context/protocol or archive/agents"
+        "Could not locate protocol implementation in mithaly_management/context/protocol or archive/agents"
     )
 
 # Expose a small helper to indicate where we loaded the implementation from

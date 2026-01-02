@@ -24,7 +24,8 @@ class MockUserService:
 
     async def update_user(self, user_id: str, updates):
         data = updates.dict(exclude_unset=True)
-        return {"id": user_id, **data, "updated_at": "2025-01-01T00:00:00Z"}
+        # Return a user-like dict including created_at to satisfy response model
+        return {"id": user_id, **data, "created_at": "2025-01-01T00:00:00Z", "updated_at": "2025-01-01T00:00:00Z"}
 
     async def create_user(self, user):
         data = user.dict()
