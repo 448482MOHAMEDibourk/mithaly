@@ -1,0 +1,10 @@
+{
+  "conclusion": "failure",
+  "createdAt": "2026-01-03T09:20:17Z",
+  "databaseId": 20675338011,
+  "headBranch": "clean/pr-clean-apply-context-changes",
+  "headSha": "41d94e00399d665aa131902c437727ffc351cb13",
+  "status": "completed",
+  "url": "https://github.com/448482MOHAMEDibourk/mithaly/actions/runs/20675338011"
+}
+{"databaseId":20675338011,"conclusion":"failure","headBranch":"clean/pr-clean-apply-context-changes","number":3,"status":"completed","startedAt":"2026-01-03T10:05:03Z","url":"https://github.com/448482MOHAMEDibourk/mithaly/actions/runs/20675338011","log_path":"docs/knowledge/context/ci_pr5_run_20675338011.log","savedAt":"2026-01-03T10:07:08Z"}

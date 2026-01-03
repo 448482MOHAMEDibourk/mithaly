@@ -1,12 +1,36 @@
-# Mithaly TODO
 
-Pending and deferred tasks for the repository.
+# Mithaly TODO (ordered by priority)
 
-- **Defer PR merge until RAG**: Mark PR #4 (`pr/clean-apply-context-changes`) as deferred — do not merge until the RAG integration is completed. Add a `do not merge` label or set the PR to Draft. (PR: https://github.com/448482MOHAMEDibourk/mithaly/pull/4)
+1. **Defer PR merge until RAG** (in-progress):
+  - PR: https://github.com/448482MOHAMEDibourk/mithaly/pull/4
+  - Action: set PR to Draft or add `do not merge` label until the RAG integration is completed.
 
-- **Prepare clean PR branch**: Continue preparing the filtered/clean branch to remove large artifacts and finalize for review.
+2. **Prepare clean PR branch** (in-progress):
+  - Create `clean/*` branch or filtered branch that removes tracked virtualenvs and large artifacts.
+  - Ensure `.gitignore` is present and the branch is ready for CI verification.
 
-- **Notes**: CI for the PR passed (run 20674759338). The `docs/knowledge/context/ci_results.jsonl` file contains the recorded CI result.
+3. **Repository hygiene / history clean** (not-started):
+  - If large binaries exist in history, run `git filter-repo` to remove them and publish a cleaned branch for review.
+
+4. **Monitor CI for branch** (completed for current run):
+  - Latest run: `20674759338` — conclusion: `success`.
+  - Recorded in `docs/knowledge/context/ci_results.jsonl`.
+
+5. **Update docs/knowledge** (completed):
+  - Merged `docs/context` into `docs/knowledge/context` and archived duplicates under `docs/archive/merge_20260103_0830/`.
+
+6. **Save session snapshot** (completed):
+  - Snapshot file: `docs/knowledge/context/snapshots/session_snapshot_2026-01-03T08:30:00Z.json`.
+
+7. **Open PR and request review** (completed):
+  - PR created from `pr/clean-apply-context-changes`; reviewers to be added after hygiene work.
+
+---
+
+Next actions suggested:
+- Set PR #4 to Draft / add `do not merge` label (I can do this for you).
+- Continue preparing the clean branch and run local verification.
+
 ## ملخّص حالة المهام (تصنيف)
 
 - **منجزة:**
@@ -48,22 +72,27 @@ Pending and deferred tasks for the repository.
 
 أولوية حرجة — P0 (يجب إصلاحها فوراً):
 
-- [ ] تنفيذ `check_inflection()` في `src/mithaly/core/engine.py` ليكتشف حالات الانعطاف ويعيد الحالة الصحيحة (`"end"` أو `"planning"`) كما في التوصية في `workflow_implementation_assessment.txt`.
-- [ ] إنشاء و/أو توليد `docs/context/current_context.json` من الحالة الجارية (`AgentState`) قبل أي snapshot حتى تعمل سياسة النسخ (`transition_logger`) بشكل مستقَر.
- - [ ] إضافة `probe()`/`semantic_probe()` وربطها بـ INFLECTION_POINT بحيث يعتمد `check_inflection()` على نتائج probe (أدوات استدلال دلالي قبل اتخاذ القرار).
- - [ ] فرض القاعدة الدستورية "الإدراك قبل الإرادة" داخل `SafeExecutor` أو معالج التنفيذ: رفض (Raise) تنفيذ إذا لم تتضمن الحمولة `probe_results`، مع آلية timeout/escape للحالات غير التفاعلية.
+- [ ] تنفيذ `check_inflection()` في `src/mithaly/core/engine.py` ليكتشف حالات الانعطاف ويعيد الحالة الصحيحة (`"end"` أو `"planning"`). (المرجع: `docs/todo_references/workflow_implementation_assessment.txt`)
+- [ ] **إعادة إنشاء وتوحيد الدستور السيادي (Consolidate Master Constitution):** (المرجع: `docs/todo_references/implementation_plan.md.resolved`)
+    - [ ] إعادة إنشاء `MITHALY_CONSTITUTION.md` كمصدر وحيد للحقيقة (Single Source of Truth).
+    - [ ] دمج نصوص المصطلحات والمنهجية ومعايير الأولويات بالكامل داخل الدستور.
+    - [ ] تفعيل قواعد "قداسة الوثائق" (Sanctity) وربطها بالـ `PolicyEnforcer`.
+    - [ ] حذف الملفات الثانوية المدمجة لتقليل التشتت.
+- [ ] إنشاء و/أو توليد `docs/context/current_context.json` من الحالة الجارية (`AgentState`) قبل أي snapshot. (المرجع: `docs/todo_references/workflow_implementation_assessment.txt`)
+ - [ ] إضافة `probe()`/`semantic_probe()` وربطها بـ INFLECTION_POINT بحيث يعتمد `check_inflection()` على نتائج probe. (المرجع: `docs/todo_references/workflow_implementation_assessment.txt`)
+ - [ ] فرض القاعدة الدستورية "الإدراك قبل الإرادة" داخل `SafeExecutor` أو معالج التنفيذ. (المرجع: `docs/todo_references/awareness_and_governance_analysis.txt`)
 
 أولوية عالية — P1:
 
-- [ ] توحيد تسجيل الانتقالات: إضافة استدعاءات `record_transition()` في جميع العقد الأساسية (`node_gaps`, `node_planning`, `node_execution`, `node_feedback`) لضمان تتبع كامل.
-- [ ] إضافة `docs/rules/layered_flow.md` (مفقود وفق التقرير) وتضمين قواعد العودة الخلفية (backtracking rules) وصياغة واضحة لقواعد الانتقال.
-- [ ] ضبط سجلات الطوارئ: تضمين الحقل `emergency=true` عند حالات الطوارئ في سجلات الانتقالات وإضافة `approved_by` للحالات المُعلّقة.
+- [ ] توحيد تسجيل الانتقالات: إضافة استدعاءات `record_transition()` في جميع العقد الأساسية. (المرجع: `docs/todo_references/layer_transition_schema.json`)
+- [ ] إضافة `docs/rules/layered_flow.md` (مفقود وفق التقرير) وتضمين قواعد العودة الخلفية وصياغة واضحة لقواعد الانتقال. (المرجع: `docs/todo_references/constitution_workflow_conflicts.txt`)
+- [ ] ضبط سجلات الطوارئ: تضمين الحقل `emergency=true` إدراج `approved_by` للحالات المُعلّقة. (المرجع: `docs/todo_references/layer_transition_schema.json`)
 
 أولوية متوسطة — P2:
 
-- [ ] تضمين منطق منع/قصر backtracking في LangGraph (تحديث الحواف/التحقق بحيث لا تعود تحركات الـ`Feedback` مباشرة إلى `Gaps/Planning` إلا عبر مراجعة صريحة).
-- [ ] توسيع فحوص CI ليتحقق من وجود `current_context.json` قبل السماح بإنشاء snapshot، وإضافة اختبار صغير يضمن أن `transition_logger` يرفق `emergency` و`approved_by` كما يجب.
- - [ ] إضافة اختبارات/فحوص CI للتأكد من: وجود `current_context.json` قبل snapshot، وأن `SafeExecutor` يرفض payloads من دون `probe_results`، وأن الـ`transition_logger` يدرج الحقول `emergency` و`approved_by` حيث يلزم.
+- [ ] تضمين منطق منع/قصر backtracking في LangGraph. (المرجع: `docs/todo_references/workflow_implementation_assessment.txt`)
+- [ ] توسيع فحوص CI ليتحقق من وجود `current_context.json` واختبار سجلات الطوارئ. (المرجع: `docs/todo_references/workflow_implementation_assessment.txt`)
+ - [ ] إضافة اختبارات/فحوص CI للتأكد من وجود `current_context.json` ورفض payloads بدون `probe_results`. (المرجع: `docs/todo_references/awareness_and_governance_analysis.txt`)
 
 ### 🏷️ توحيد مسميات النظام (Nomenclature Standardization):
 > **المرجع:** `docs/rules/TERMINOLOGY.md` - قسم التوصيات
@@ -93,7 +122,7 @@ Pending and deferred tasks for the repository.
   - **الأثر:** تفعيل INFLECTION_POINT بالكامل
 
 #### Ollama/LLM (90% → 95%):
-- [ ] **إضافة health check للـ Ollama server**:
+- [ ] **إضافة health check للـ Ollama server**: (المرجع: `docs/todo_references/`)
   ```python
   def _check_ollama_health(self):
       try:
@@ -132,7 +161,7 @@ Pending and deferred tasks for the repository.
   ```
   - **الأثر:** MCP يعمل بنشاط
 
-- [ ] **إضافة usage example في أحد الـ nodes**:
+- [ ] **إضافة usage example في أحد الـ nodes**: (المرجع: `docs/todo_references/`)
   - مثال: استخدام filesystem MCP في `node_execution`
   - **الأثر:** إثبات العمل (proof of concept)
 
@@ -149,7 +178,7 @@ Pending and deferred tasks for the repository.
   ```
   - **الأثر:** consistency في البيانات
 
-- [ ] **إضافة cleanup policy لـ ChromaDB**:
+- [ ] **إضافة cleanup policy لـ ChromaDB**: (المرجع: `docs/todo_references/`)
   - دالة `cleanup_old_entries(days=90)` في VectorStore
   - حذف records أقدم من X يوم
   - **الأثر:** منع التضخم اللانهائي

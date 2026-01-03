@@ -1,0 +1,54 @@
+# Plan: Documentation Cleanup
+
+Objective: Remove temporary, redundant, and bypassed files from `/home/eburk/Documents/mithaly/docs` to maintain a clean source of truth.
+
+## Proposed Actions
+
+### 1. Deletion of Redundant/Temporary Files
+The following files are either old backups, drafts, or temporary task trackers that are no longer needed:
+- `docs/mithaly_todo.md.bak` (Old backup from Jan 2)
+- `docs/mithaly_todo_updated.md` (Temporary update file)
+- `docs/MITHALY_CONSTITUTION.draft.md` (Draft replaced by canonical constitution)
+- `docs/audit/task.md` (Leftover task tracker)
+- `docs/context/knowledge_addition_2026-01-03.jsonl` (Temporary ledger log)
+
+### 2. Archiving of Notes
+- **File:** `docs/فرض القواعد والمنهجية.txt`
+- **Action:** Move to `docs/archive/2026-01-03-early-implementation/` to preserve historical notes if needed.
+
+### 3. Consolidation of Architectural Context
+- **Files:** `docs/ARCHITECTURAL_CONTEXT.md` (Primary) and `docs/context/ARCHITECTURAL_CONTEXT.md` (Pointer)
+- **Problem:** Having a pointer file in `docs/context/` while the primary is in root `docs/` is slightly inconsistent with the intent of `docs/context/` being the hub for architectural state.
+- **Action:** 
+    - Move `docs/ARCHITECTURAL_CONTEXT.md` to `docs/context/ARCHITECTURAL_CONTEXT.md` (Overwriting the pointer/empty file).
+    - This ensures all "Context" files live in `docs/context/`.
+
+# Consolidating Sovereign Rules into the Constitution
+
+Merge all disparate rule documents into `MITHALY_CONSTITUTION.md` to create a single "Sovereign Rulebook" while keeping the technical workflow separate.
+
+## Proposed Changes
+
+### Documentation
+
+#### [MODIFY] [MITHALY_CONSTITUTION.md](file:///home/eburk/Documents/mithaly/docs/MITHALY_CONSTITUTION.md)
+- Integrate the full content of `enforcement_methodology.md`.
+- Integrate the semantic glossary from `TERMINOLOGY.md`.
+- Re-codify the full text of `PRIORITIZATION_CRITERIA.md` (which was deleted).
+- Establish this file as the "Universal Sovereign Code".
+
+#### [MODIFY] [layered_flow.md](file:///home/eburk/Documents/mithaly/docs/rules/layered_flow.md)
+- Strengthen the mapping table between Constitutional Articles and `workflow.md` nodes.
+
+#### [DELETE] [enforcement_methodology.md](file:///home/eburk/Documents/mithaly/docs/rules/enforcement_methodology.md)
+#### [DELETE] [TERMINOLOGY.md](file:///home/eburk/Documents/mithaly/docs/rules/TERMINOLOGY.md)
+
+## Verification Plan
+
+### Manual Verification
+- Verify that searching for any project term or rule leads to `MITHALY_CONSTITUTION.md`.
+- Verify that `workflow.md` reflects the engineering logic without legal clutter.
+ated content.
+- **Verification:** Ensure that `layered_flow.md` successfully bridges the gaps identified in `docs/audit/constitution_workflow_conflicts.txt`.
+- **Verification:** Test `PolicyEnforcer` with a dummy attempt to delete `MITHALY_CONSTITUTION.md` to ensure it blocks the action.
+- **User Review:** Present the bridge document for approval.

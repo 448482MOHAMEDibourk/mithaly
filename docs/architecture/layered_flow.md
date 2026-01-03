@@ -50,6 +50,28 @@
 
 المطالب التنفيذية:
 - تنفيذ مخطط JSON Schema لانتقال الطبقات في `docs/context/schemas/layer_transition_schema.json`.
-- تضمين قواعد الـ INFLECTION_POINT: أخذ snapshot في `docs/context/` قبل الإيقاف أو إجراء تغييرات جوهرية.
+- تضمين قواعد الـ- INFLECTION_POINT and snapshot policy: see `docs/MITHALY_CONSTITUTION.md`
 
-آخر تحديث: 2026-01-03
+## 4. المفسر الدستوري (The Constitutional Interpreter)
+
+تعمل هذه الوثيقة كجسر (Bridge) لتفسير المبادئ الراسخة في الدستور وتحويلها إلى إجراءات تقنية:
+
+| مبدأ الدستور | التفسير الإجرائي (Workflow) |
+| :--- | :--- |
+| مصدر الحقيقة (SOT) | مرجع معزول للمستخدم؛ لا يُستدعى برمجياً. |
+| المادة 2: حتمية الانعطاف | تفعيل عقدة `INFLECTION` وتسجيل سجل `outcome: blocked`. |
+| المادة 4: الإدراك قبل الإرادة | إلزامية استدعاء `probe()` قبل الانتقال من Planning إلى Execution. |
+| المادة 5: قداسة النصوص | منع عمليات `os.remove` أو `write` على ملفات الدستور والـ workflow. |
+
+## 5. الحماية الصلبة (Sanctity Enforcement)
+
+قائمة الملفات المقدسة (Sacred Files) التي يُحظر المساس بها برمجياً:
+1. `docs/architecture/MITHALY_SOURCE_OF_TRUTH_CANONICAL.md`
+2. `MITHALY_CONSTITUTION.md`
+3. `docs/architecture/workflow.md`
+4. `docs/architecture/rules/layered_flow.md`
+
+**البروتوكول:** أي محاولة تعديل آلية لهذه الملفات تؤدي فوراً إلى تفعيل `INFLECTION_POINT` وطلب إذن يدوي من المستخدم (`approved_by: "user"`).
+
+---
+**آخر تحديث:** 2026-01-03

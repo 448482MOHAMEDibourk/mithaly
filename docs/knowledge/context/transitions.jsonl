@@ -9,3 +9,15 @@
 {"from_layer": "Execution", "to_layer": "Feedback", "actor": "BuildEngine.node_execution", "outcome": "completed", "id": "2be1d312-2894-4bd3-8210-3452d1cfa461", "timestamp": "2026-01-03T07:50:41.957304Z"}
 {"from_layer": "Feedback", "to_layer": "END", "actor": "BuildEngine.node_feedback", "outcome": "failure", "emergency": true, "id": "f27db658-a505-4038-9638-4db0d19789aa", "timestamp": "2026-01-03T07:50:41.960573Z"}
 {"id": "694755e1-644f-41a8-9c08-ad617e9ab773", "from_layer": "policy", "to_layer": "inflection", "timestamp": "2026-01-01T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data"}
+{"from_layer": "Policy", "to_layer": "INFLECTION", "timestamp": "2026-01-03T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data", "id": "205c62bf-e74c-4cc8-853e-016e1b29a9d3"}
+{"from_layer": "Gaps", "to_layer": "Policy", "actor": "BuildEngine.node_gaps", "outcome": "no-op", "id": "1e732535-41c5-4ba9-b204-0802cce90062", "timestamp": "2026-01-03T09:50:20.478016+00:00"}
+{"from_layer": "Planning", "to_layer": "EXECUTION", "actor": "BuildEngine.node_planning", "outcome": "passed", "id": "666d86d5-91cb-457a-b73c-5173aa41efe5", "timestamp": "2026-01-03T09:50:20.478437+00:00"}
+{"from_layer": "Execution", "to_layer": "Feedback", "actor": "BuildEngine.node_execution", "outcome": "completed", "id": "be0528e7-e149-4761-ab13-11399b3eeef3", "timestamp": "2026-01-03T09:50:20.478844+00:00"}
+{"from_layer": "Feedback", "to_layer": "END", "actor": "BuildEngine.node_feedback", "outcome": "failure", "emergency": true, "id": "17c9d514-ace1-4805-aa6d-02093580e11f", "timestamp": "2026-01-03T09:50:20.481712+00:00"}
+{"id": "f89abfcb-f655-4a06-8241-561cb763ae1f", "from_layer": "policy", "to_layer": "inflection", "timestamp": "2026-01-01T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data"}
+{"from_layer": "Policy", "to_layer": "INFLECTION", "timestamp": "2026-01-03T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data", "id": "8407218e-1a8a-4067-a8a7-0ff098a9ead0"}
+{"from_layer": "Gaps", "to_layer": "Policy", "actor": "BuildEngine.node_gaps", "outcome": "no-op", "id": "14809e09-5eea-4fba-bd27-f344a5086b10", "timestamp": "2026-01-03T10:11:01.664703+00:00"}
+{"from_layer": "Planning", "to_layer": "EXECUTION", "actor": "BuildEngine.node_planning", "outcome": "passed", "id": "27a1bd4c-98bc-4419-8c49-1f1f985ab0a4", "timestamp": "2026-01-03T10:11:01.665052+00:00"}
+{"from_layer": "Execution", "to_layer": "Feedback", "actor": "BuildEngine.node_execution", "outcome": "completed", "id": "8fdba26e-a16e-4fa8-bb00-79c43a5f64e5", "timestamp": "2026-01-03T10:11:01.665407+00:00"}
+{"from_layer": "Feedback", "to_layer": "END", "actor": "BuildEngine.node_feedback", "outcome": "failure", "emergency": true, "id": "51ac082e-bd0c-4c30-83a3-da8aab21c1e3", "timestamp": "2026-01-03T10:11:01.667873+00:00"}
+{"id": "2ae80f1b-8683-44ad-a8b2-6e4d4563743d", "from_layer": "policy", "to_layer": "inflection", "timestamp": "2026-01-01T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data"}
