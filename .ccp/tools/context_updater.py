@@ -1,8 +1,18 @@
 #!/usr/bin/env python3
+"""
+Developer-tool copy: .ccp/tools/context_updater.py
+
+This script is a developer-side helper that maintains a local `.ccp/context`
+state used by developer-sandbox workflows. It is NOT the canonical
+`src/mithaly/core/utils/context_updater.py` implementation. Keep scope
+limited to local sandboxing and document any behavior differences here.
+"""
+
 import json
 import sys
 import os
 from datetime import datetime
+
 
 def update_context(change):
     root = os.getcwd()

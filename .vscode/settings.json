@@ -1,0 +1,15 @@
+{
+    // Use VS Code's interpreter discovery; do not hardcode the path here.
+    "python.analysis.typeCheckingMode": "basic",
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ]
+    ,
+    "python.envFile": "${workspaceFolder}/.env"
+}

@@ -1,0 +1,2 @@
+{"timestamp": 1767396154.3931203, "model": "qwen2.5-coder:3b", "task_type": "fast", "duration": 62.97199845314026, "success": true}
+{"timestamp": 1767399470.4879265, "model": "qwen2.5-coder:3b", "task_type": "fast", "duration": 120.1685082912445, "success": false}
