@@ -1,0 +1,15 @@
+# Default Mithaly policy definitions
+# These provide baseline constraints the PolicyEnforcer will load by default.
+# Keys here are merged into detected constraints; set defaults appropriate
+# for your environment.
+
+requires_db: false
+requires_container_runtime: false
+requires_network_access: false
+max_execution_time_seconds: 300
+disallowed_actions:
+  - remove-production-data
+  - expose-secrets
+
+# Example of a rule mapping to prefer human review for sensitive projects
+sensitive_project_review: true

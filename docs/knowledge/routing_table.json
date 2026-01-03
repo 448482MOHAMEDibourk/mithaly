@@ -1,0 +1,5 @@
+{
+    "fast": "qwen2.5-coder:3b",
+    "standard": "qwen2.5-coder:7b-instruct-q4_K_M",
+    "smart": "deepseek-coder-v2:16b-lite-instruct-q3_K_S"
+}

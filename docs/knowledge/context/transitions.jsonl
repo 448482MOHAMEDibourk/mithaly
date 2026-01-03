@@ -1,0 +1,11 @@
+{"from_layer": "Gaps", "to_layer": "Policy", "actor": "BuildEngine.node_gaps", "outcome": "no-op", "id": "d711a918-0ce2-4a53-b55a-c95968492c09", "timestamp": "2026-01-03T07:21:59.477185Z"}
+{"from_layer": "Planning", "to_layer": "EXECUTION", "actor": "BuildEngine.node_planning", "outcome": "passed", "id": "0fc1f73f-4c11-428a-9003-f51cd309e543", "timestamp": "2026-01-03T07:21:59.477785Z"}
+{"from_layer": "Execution", "to_layer": "Feedback", "actor": "BuildEngine.node_execution", "outcome": "completed", "id": "aeaa2314-a760-451f-90f1-302be17d1572", "timestamp": "2026-01-03T07:21:59.478382Z"}
+{"from_layer": "Feedback", "to_layer": "END", "actor": "BuildEngine.node_feedback", "outcome": "failure", "emergency": true, "id": "1c24e587-9174-4d47-b6be-d28611c6e174", "timestamp": "2026-01-03T07:21:59.481204Z"}
+{"from_layer": "Policy", "to_layer": "INFLECTION", "timestamp": "2026-01-03T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data", "id": "a5dbb671-bfd9-4761-99fc-91ed1e1dd1d9"}
+{"from_layer": "Policy", "to_layer": "INFLECTION", "timestamp": "2026-01-03T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data", "id": "af152b60-cbf9-4e03-a329-bdc17a263815"}
+{"from_layer": "Gaps", "to_layer": "Policy", "actor": "BuildEngine.node_gaps", "outcome": "no-op", "id": "37e2f9d8-4658-4ca4-866f-8658818a5345", "timestamp": "2026-01-03T07:50:41.956232Z"}
+{"from_layer": "Planning", "to_layer": "EXECUTION", "actor": "BuildEngine.node_planning", "outcome": "passed", "id": "794b6ecb-c25b-4d69-a04f-0f27bf6d7ae0", "timestamp": "2026-01-03T07:50:41.956714Z"}
+{"from_layer": "Execution", "to_layer": "Feedback", "actor": "BuildEngine.node_execution", "outcome": "completed", "id": "2be1d312-2894-4bd3-8210-3452d1cfa461", "timestamp": "2026-01-03T07:50:41.957304Z"}
+{"from_layer": "Feedback", "to_layer": "END", "actor": "BuildEngine.node_feedback", "outcome": "failure", "emergency": true, "id": "f27db658-a505-4038-9638-4db0d19789aa", "timestamp": "2026-01-03T07:50:41.960573Z"}
+{"id": "694755e1-644f-41a8-9c08-ad617e9ab773", "from_layer": "policy", "to_layer": "inflection", "timestamp": "2026-01-01T00:00:00Z", "actor": "pytest", "outcome": "blocked", "reason": "sensitive data"}
