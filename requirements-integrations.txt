@@ -1,0 +1,7 @@
+# Optional integrations for Mithaly
+# Install these to enable LangGraph orchestration and MCP connectivity.
+langgraph
+langchain-core
+mcp
+chromadb
+ollama
