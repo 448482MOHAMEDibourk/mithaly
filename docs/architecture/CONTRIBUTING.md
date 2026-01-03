@@ -36,6 +36,6 @@ Important: the project constitution (`MITHALY_CONSTITUTION.md`) and the Source o
 - Contributors MUST use the `MITHALY_SOURCE_OF_TRUTH` environment variable to point to the canonical Source of Truth file when running tools or scripts that need to reference it. Example: `export MITHALY_SOURCE_OF_TRUTH=/path/to/docs/architecture/MITHALY_SOURCE_OF_TRUTH_CANONICAL.md`.
 - Tools that create snapshots (e.g., snapshot tooling which writes to `docs/knowledge/context/snapshots/`) may generate copies only; they must never modify the canonical files under `docs/architecture/` automatically.
 - The workflow to promote artifacts from `docs/` into canonical locations must include a manual approval step and an approval record saved in `docs/approvals/` (e.g., `docs/approvals/<pr-number>.approved`) before calling `FeedbackLoop.persist_to_kb()` or merging changes that touch protected documents.
-- CI or pre-commit checks should reject pushes/PRs that attempt to modify `docs/architecture/MITHALY_SOURCE_OF_TRUTH` or `MITHALY_CONSTITUTION.md` unless an approval file is present or a maintainer has explicitly granted permission in the PR comments.
+-- CI or pre-commit checks should reject pushes/PRs that attempt to modify `docs/architecture/MITHALY_SOURCE_OF_TRUTH_CANONICAL.md` or `MITHALY_CONSTITUTION.md` unless an approval file is present or a maintainer has explicitly granted permission in the PR comments.
 
 Follow these rules to keep the repository consistent with the project constitution.
