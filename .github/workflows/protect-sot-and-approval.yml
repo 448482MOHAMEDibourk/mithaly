@@ -31,3 +31,12 @@ jobs:
           ENABLE_CURSORRULES: ${{ env.ENABLE_CURSORRULES }}
         run: |
           python scripts/ci_validate_env_and_approvals.py
+
+      - name: Post governance failure comment (PR only)
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: |
+          python scripts/pr_governance_notifier.py
