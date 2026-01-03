@@ -15,15 +15,21 @@ SCHEMA_CANDIDATES = [
     os.path.join('docs', 'knowledge', 'context', 'schemas', 'layer_transition_schema.json'),
     os.path.join('docs', 'context', 'schemas', 'layer_transition_schema.json'),
 ]
-# Prefer writing to `docs/context` when present (tests create it),
-# otherwise fall back to canonical `docs/knowledge/context`.
-if os.path.exists(os.path.join('docs', 'context')):
-    TRANSITIONS_PATH = os.path.join('docs', 'context', 'transitions.jsonl')
-elif os.path.exists(os.path.join('docs', 'knowledge', 'context')):
-    TRANSITIONS_PATH = os.path.join('docs', 'knowledge', 'context', 'transitions.jsonl')
-else:
-    # default to legacy path if neither exists
-    TRANSITIONS_PATH = os.path.join('docs', 'context', 'transitions.jsonl')
+
+
+def _select_transitions_path() -> str:
+    """Choose the most appropriate transitions JSONL path at call-time.
+
+    Prefer `docs/context` when it exists (tests create it at runtime),
+    otherwise fall back to canonical `docs/knowledge/context`.
+    If neither exists, return the legacy `docs/context/transitions.jsonl` path
+    (caller will create directories as needed).
+    """
+    if os.path.exists(os.path.join('docs', 'context')):
+        return os.path.join('docs', 'context', 'transitions.jsonl')
+    if os.path.exists(os.path.join('docs', 'knowledge', 'context')):
+        return os.path.join('docs', 'knowledge', 'context', 'transitions.jsonl')
+    return os.path.join('docs', 'context', 'transitions.jsonl')
 
 
 def _load_schema() -> Dict[str, Any]:
@@ -60,8 +66,6 @@ def record_transition(record: Dict[str, Any]) -> Dict[str, Any]:
     Ensures `id` and `timestamp` (ts) are set, validates minimal schema,
     appends to `docs/context/transitions.jsonl`. Returns the final record.
     """
-    os.makedirs(os.path.dirname(TRANSITIONS_PATH), exist_ok=True)
-
     final = dict(record)
     if 'id' not in final:
         final['id'] = str(uuid.uuid4())
@@ -76,12 +80,14 @@ def record_transition(record: Dict[str, Any]) -> Dict[str, Any]:
         raise ValueError('Transition record missing required fields per schema')
 
     # Append to JSONL
+    transitions_path = _select_transitions_path()
+    os.makedirs(os.path.dirname(transitions_path), exist_ok=True)
     try:
-        with open(TRANSITIONS_PATH, 'a', encoding='utf-8') as f:
+        with open(transitions_path, 'a', encoding='utf-8') as f:
             f.write(json.dumps(final, ensure_ascii=False) + '\n')
     except Exception:
-        # non-fatal: try to create file
-        with open(TRANSITIONS_PATH, 'w', encoding='utf-8') as f:
+        # non-fatal: try to create file (fallback)
+        with open(transitions_path, 'w', encoding='utf-8') as f:
             f.write(json.dumps(final, ensure_ascii=False) + '\n')
 
     # Special-case: if blocked/inflection, create a snapshot of current_context.json if present
