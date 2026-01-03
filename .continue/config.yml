@@ -1,0 +1,5 @@
+providers:
+  - name: mithaly_sot
+    description: "Inject MITHALY_SOURCE_OF_TRUTH content as custom context when explicitly enabled."
+    module: .continue.providers.mithaly_sot
+    enabled_env: ENABLE_CONTINUE_MITHALY_SOT
