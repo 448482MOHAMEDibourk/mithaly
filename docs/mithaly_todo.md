@@ -1,3 +1,12 @@
+# Mithaly TODO
+
+Pending and deferred tasks for the repository.
+
+- **Defer PR merge until RAG**: Mark PR #4 (`pr/clean-apply-context-changes`) as deferred — do not merge until the RAG integration is completed. Add a `do not merge` label or set the PR to Draft. (PR: https://github.com/448482MOHAMEDibourk/mithaly/pull/4)
+
+- **Prepare clean PR branch**: Continue preparing the filtered/clean branch to remove large artifacts and finalize for review.
+
+- **Notes**: CI for the PR passed (run 20674759338). The `docs/knowledge/context/ci_results.jsonl` file contains the recorded CI result.
 ## ملخّص حالة المهام (تصنيف)
 
 - **منجزة:**
@@ -55,6 +64,17 @@
 - [ ] تضمين منطق منع/قصر backtracking في LangGraph (تحديث الحواف/التحقق بحيث لا تعود تحركات الـ`Feedback` مباشرة إلى `Gaps/Planning` إلا عبر مراجعة صريحة).
 - [ ] توسيع فحوص CI ليتحقق من وجود `current_context.json` قبل السماح بإنشاء snapshot، وإضافة اختبار صغير يضمن أن `transition_logger` يرفق `emergency` و`approved_by` كما يجب.
  - [ ] إضافة اختبارات/فحوص CI للتأكد من: وجود `current_context.json` قبل snapshot، وأن `SafeExecutor` يرفض payloads من دون `probe_results`، وأن الـ`transition_logger` يدرج الحقول `emergency` و`approved_by` حيث يلزم.
+
+### 🏷️ توحيد مسميات النظام (Nomenclature Standardization):
+> **المرجع:** `docs/rules/TERMINOLOGY.md` - قسم التوصيات
+
+- [ ] **تعديل مسميات المجلدات لتجنب الالتباس:**
+    - [ ] تغيير `core/` (الجذر) إلى `runtime/` لتمييزه عن الحزمة المكتبية.
+    - [ ] تغيير `Raw_Artifact/` إلى `legacy-archive/` لتوضيح الطبيعة التاريخية.
+- [ ] **تحسين تسمية ملفات التوثيق:**
+    - [ ] تحويل `System Architecture Gap.txt` إلى `architecture_gap.md`.
+    - [ ] تغيير `docs/context/history.md` إلى `session_history.md`.
+    - [ ] التأكد من تحديث كافة المراجع البرمجية والتوثيقية بعد تغيير المسارات.
 
 ═══════════════════════════════════════════════════════════════════════════════
 ## 🔧 إكمال دمج الأدوات - Tools Integration Completion
