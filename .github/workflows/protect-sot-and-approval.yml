@@ -1,0 +1,42 @@
+name: Protect SoT and Require Approvals
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  enforce-protections:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install minimal deps
+        run: python -m pip install --upgrade pip
+
+      - name: Check for protected filenames
+        run: |
+          python scripts/check_protected_names.py
+
+      - name: Check restricted env vars require approvals
+        env:
+          ENABLE_CONTINUE_MITHALY_SOT: ${{ env.ENABLE_CONTINUE_MITHALY_SOT }}
+          ENABLE_CURSORRULES: ${{ env.ENABLE_CURSORRULES }}
+        run: |
+          python scripts/ci_validate_env_and_approvals.py
+
+      - name: Post governance failure comment (PR only)
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: |
+          python scripts/pr_governance_notifier.py

@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Mithaly Engine",
+            "type": "shell",
+            "command": "python -m mithaly.core.engine",
+            "env": { "PYTHONPATH": "src" },
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Run tests (pytest)",
+            "type": "shell",
+            "command": "pytest -q",
+            "env": { "PYTHONPATH": "src" },
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Preflight Check",
+            "type": "shell",
+            "command": "python tools/scripts/preflight_check.py",
+            "presentation": { "reveal": "always" },
+            "env": { "PYTHONPATH": "src" }
+        },
+        {
+            "label": "Snapshot Architectural Context",
+            "type": "shell",
+            "command": "python tools/scripts/snapshot_context.py",
+            "presentation": { "reveal": "always" },
+            "env": { "PYTHONPATH": "src" }
+        },
+        {
+            "label": "Run duplicate scanner",
+            "type": "shell",
+            "command": "python tools/scripts/find_duplicates.py --json > tools/scripts/duplicates.json || true",
+            "presentation": {
+                "reveal": "always"
+            }
+        }
+    ]
+}

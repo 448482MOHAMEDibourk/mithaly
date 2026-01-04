@@ -1,0 +1,23 @@
+# .cursorrules
+#
+# Inline workspace memory rules for the Mithaly agent.
+# This file is intentionally small and opt-in. The agent may load its
+# contents into RAM as a "bound memory" on each request when running
+# locally or when explicitly enabled via the environment variable
+# `ENABLE_CURSORRULES=1`.
+#
+# Usage notes:
+# - Do NOT enable this in CI unless explicitly intended.
+# - The file should not contain secrets.
+# - The agent implementation must be written to honor this policy
+#   (i.e., it must check ENABLE_CURSORRULES and the execution environment).
+#
+enabled_env: ENABLE_CURSORRULES
+source: .cursorrules
+mode: ram
+
+# Rules (natural language / short directives):
+- "Treat `MITHALY_SOURCE_OF_TRUTH` as the highest-priority reference before answering."
+- "Do not perform any automated edits to files listed as sacred in the constitution."
+- "If a requested operation would modify a sacred file, halt and raise an INFLECTION_POINT."
+- "Log any automated attempt to read/modify the Source of Truth to the transition ledger."

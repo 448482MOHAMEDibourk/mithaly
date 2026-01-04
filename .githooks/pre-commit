@@ -1,0 +1,40 @@
+#!/bin/bash
+# Prevent commits that modify files under `user/` unless the committer email matches the owner in `user/.owner`.
+set -euo pipefail
+
+OWNER_FILE="user/.owner"
+if [ ! -f "$OWNER_FILE" ]; then
+  echo "Error: Owner file '$OWNER_FILE' not found. Create it with your git email to allow edits to 'user/'." >&2
+  exit 1
+fi
+
+OWNER_EMAIL=$(tr -d ' \t\n\r' < "$OWNER_FILE")
+if [ -z "$OWNER_EMAIL" ]; then
+  echo "Error: '$OWNER_FILE' is empty. Fill it with the allowed git email address." >&2
+  exit 1
+fi
+
+# Determine the committer/author email from git config
+AUTHOR_EMAIL=$(git config user.email || true)
+if [ -z "$AUTHOR_EMAIL" ]; then
+  # Fallback to committer ident
+  AUTHOR_EMAIL=$(git var GIT_COMMITTER_IDENT 2>/dev/null | sed -n 's/.*<\(.*\)>.*/\1/p' || true)
+fi
+
+# Get staged files
+CHANGED_FILES=$(git diff --cached --name-only --diff-filter=ACMRT || true)
+if [ -n "$CHANGED_FILES" ]; then
+  # Filter files under user/
+  USER_CHANGES=$(printf "%s" "$CHANGED_FILES" | grep -E '^user/' || true)
+  if [ -n "$USER_CHANGES" ]; then
+    if [ "$AUTHOR_EMAIL" != "$OWNER_EMAIL" ]; then
+      echo "Error: Changes to 'user/' are restricted. Only owner <$OWNER_EMAIL> may commit these files." >&2
+      echo "Staged files under 'user/':" >&2
+      printf "%s\n" "$USER_CHANGES" >&2
+      echo "If you are the owner, set your git email with: git config user.email \"$OWNER_EMAIL\"" >&2
+      exit 1
+    fi
+  fi
+fi
+
+exit 0

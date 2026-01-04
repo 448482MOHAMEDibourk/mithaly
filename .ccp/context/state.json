@@ -1,0 +1,158 @@
+{
+  "last_action": {
+    "type": "execution",
+    "task": "archive test",
+    "risk_level": "🟡",
+    "result": "success"
+  },
+  "next_task": "انتظار تعليمات المستخدم: أكد الخطوة التالية (تشغيل smoke tests أو تشغيل learning dry-run أو إجراء آخر).",
+  "last_reviewed": "2025-12-15T12:00:00Z",
+  "adopted_timestamp": "2025-12-14T16:00:00Z",
+  "last_diagnosis_time": "2025-12-22T03:58:15.062737Z",
+  "last_updated": "2025-12-24T12:37:42.699837",
+  "context_summary_ar": "الهدف: إنتاج مشاريع قابلة للتشغيل والنشر في `OUTPUT/` انطلاقاً من المواصفات في `INPUT/`. المتطلبات تتضمن توثيق مرجعي (GOALS.md, STATE.json)، سجل توجيه pre/post، مهام قابلة للتنفيذ في `project_management/tasks/`, تكامل DebuggerSpecialist ودمجه في المحرك، قابلية تشغيل محلية (PYTHONPATH/venv وتثبيت تبعيات)، آليات اختبار (dry-run وpytest)، وآلية تصحيح آلي آمن في sandbox.",
+  "requirements": [
+    "وجود وموثوقية `project_management/GOALS.md` و`project_management/config/STATE.json`",
+    "سجل توجيه `project_management/agents/CONTEXT_LOG.jsonl` مع بروتوكول pre/post",
+    "تحويل خطة الأرشيف إلى مهام في `project_management/tasks/` (بما في ذلك `learning.py`)",
+    "دمج DebuggerSpecialist في `specialists/debugger.py` و`core/engine.py` واستدعاء debug node في `core/graph.py` عند الفشل",
+    "ضبط بيئة التشغيل المحليّة (PYTHONPATH أو venv) وتثبيت التبعيات المطلوبة",
+    "آليات اختبار وفحص: dry-run وpytest وتوليد تقارير success|failure",
+    "آلية تطبيق patch آمنة في sandbox قبل الدمج",
+    "إمكانية استرجاع الملفات المفقودة من الأرشيف المذكور"
+  ],
+  "archive_docs": [
+    "/home/eburk/Documents/mithaly/project_management/archive/14.12.2025/roadmap.md",
+    "/home/eburk/Documents/mithaly/project_management/archive/14.12.2025/implementation_plan.md",
+    "/home/eburk/Documents/mithaly/project_management/archive/14.12.2025/walkthrough.md"
+  ],
+  "archive_read_summary": {
+    "roadmap.md": "تركيز على التنفيذ المتوازي، Debugger للتصحيح الذكي، ذاكرة سياق عالية الأداء، ولوحة مراقبة للمراقبة.",
+    "implementation_plan.md": "يركّز على دمج DebuggerSpecialist كعقدة `debug` في `core/graph.py`، تشغيله في sandbox للتحقق وحفظ ملفات `.patch` بدون تطبيق تلقائي.",
+    "walkthrough.md": "توضيح PoC: DebuggerSpecialist قادر على تشخيص فشل الاختبارات، اقتراح patch، تطبيقه في sandbox والتحقق من نجاح الاختبارات."
+  },
+  "llm_read_summary": {
+    "settings.py": "يوفر إعدادات التشغيل للـ LLM: `OLLAMA_HOST` (افتراضي http://localhost:11434), `MODEL_NAME`, `MAX_TOKENS`, و`AIDER_ENDPOINT`. يستخدم كائن `settings` مشترك.",
+    "generator.py": "نموذج استدعاء بسيط لخدمة Ollama عبر POST إلى /api/generate مع payload يحتوي model وprompt وformat=json. يدعم وضع dry-run.",
+    "test_ollama_semaphore.py": "اختبار محلي للتحقق من سلوك قفل التزامن `OLLAMA_SEMAPHORE` و`OLLAMA_ACQUIRE_TIMEOUT`; يبيّن كيف نحد من استدعاءات Ollama المتزامنة لحماية الموارد.",
+    "CONSOLIDATED.md": "ملخّص تجارب يوصي بتقييد التوازي، ضبط niceness عند auto_start، استخدام sandbox، وتحسين retry/timeout لنداءات Ollama."
+  },
+  "llm_recommendations": [
+    "تأكد من تعيين `OLLAMA_HOST`/`OLLAMA_API_BASE` وتهيئة `MODEL_NAME` قبل تشغيل DebuggerSpecialist.",
+    "اضبط قيود التوازي (`OLLAMA_SEMAPHORE`, `OLLAMA_MAX_CONCURRENCY`) و`ollama.nice` لتقليل تأثير الموارد.",
+    "شغّل `test_ollama_semaphore.py` كاختبار دخان محلي قبل التشغيل الواسع.",
+    "اجعل مولّد الـ LLM يقبل وضع `dry_run` وتحقق من مخرجات JSON قبل اعتمادها في سير التنفيذ الآلي.",
+    "أضف آليات retry وbackoff في استدعاءات Ollama، ودوّن حالات timeout بوضوح في السجلات.",
+    "نفّذ قيود sandbox عند تطبيق أي patch مقترح من الـ LLM وتحقق من عدم كتابة ملفات خارج المسار المسموح.",
+    "تحقق من وجود دالة `query_ollama` في `seven_pole_agent` وواجهات الاستخدام قبل دمجها في المحرك الرئيسي."
+  ],
+  "aider_ollama_read_summary": {
+    "aider": "Aider يستخدم كأداة مراجعة خارجية عبر CLI (`aider`) مع ملفات إعداد محلية مثل `.aider.model.settings.yml` و`.aider.conf.yml`. CI يتحقق من تشغيل smoke scripts (`smoke_aider.py`) قبل دمج تغييرات تؤثر على تكامل Aider.",
+    "ollama": "توجد أدوات متعددة للتعامل مع Ollama: فحوصات صحة (`check_ollama`)، دوال استدعاء `query_ollama` مع retry/backoff، وآليات auto-start (`ollama serve`) مع خيار `nice` لتقليل الأولوية. كما توجد سكربتات تنفيذ تلقائي تعتمد على مخرجات LLM مع وضع dry-run للسلامة.",
+    "integration_notes": "PR templates تتطلب ذكر تأثيرات على 'ollama' و/أو 'aider'; توجد اختبارات دخان وملفات تكوين في `config/local_models.yaml` و`rules/` تفحص تهيئة القرار وسير العمل.",
+    "recommendations": [
+      "شغّل `smoke_ollama.py` و`smoke_aider.py` كاختبارات دخان قبل التشغيل الواسع.",
+      "شغّل `test_ollama_semaphore.py` للتحقق من قيود التوازي المحلية.",
+      "تأكد من ضبط `OLLAMA_API_BASE`/`OLLAMA_HOST` و`MODEL_NAME` في البيئة أو ملفات الإعدادات.",
+      "اضمن أن أي استدعاءات تلقائية للنماذج تعمل داخل sandbox أو dry-run قبل تطبيق تغييرات منتجة."
+    ]
+  },
+  "recent_edits": [
+    "project_management/agents/CONTEXT_LOG.jsonl (appended smoke_ollama pre/post 2025-12-22T17:43)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md pre 2025-12-22T17:42:28+01:00)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md post 2025-12-22T17:42:29+01:00)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended protocol.pr.md pre/post 2025-12-22T16:30)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended i-project smoke pre/post 2025-12-22T16:17)",
+    "project_management/agents/AGENT_CONTEXT.json (updated 2025-12-22T16:17)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended dry-run pre/post 2025-12-22T15:12)",
+    "project_management/agents/AGENT_CONTEXT.json (updated 2025-12-22T15:12)",
+    "project_management/agents/protocol.ds.md (created 2025-12-22T14:55)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended pre/post 2025-12-22T14:55)",
+    "project_management/agents/AGENT_CONTEXT.json (updated 2025-12-22T14:55)",
+    "core/engine.py (updated 2025-12-22T12:15)",
+    "core/engine.py (register_specialist -> coordinator.register added 2025-12-22T12:40)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended 2025-12-22T12:02)",
+    "project_management/agents/AGENT_CONTEXT.json (updated 2025-12-22T12:02)",
+    "project_management/agents/CONTEXT_LOG.jsonl (appended 2025-12-22T12:03-12:05)",
+    "project_management/tasks/core/learning.py (dry-run executed 2025-12-22T12:04)",
+    "specs/coordinator_spec_v0.1.md (created 2025-12-22T12:05)",
+    "core/coordinator.py (created 2025-12-22T12:05)",
+    "core/task_coordinator.py (created 2025-12-22T12:12)",
+    "tests/test_coordinator.py (created 2025-12-22T12:05)",
+    "execution/logs/http_project_stress/uvicorn_stdout.log (RAG init warning: chromadb missing)",
+    "data/experience/i-project/scripts/smoke_ollama.py (failed locally: missing rules/architecture_rules.json)",
+    "rules/architecture_rules.json (restored from attachment)",
+    "core/engine.py (step 3: prefer self.coordinator in _execute_step; 2025-12-22T13:05:00Z)",
+    "project_management/agents/AGENT_CONTEXT.json (updated by protocol.pr.md execution 2025-12-22T13:30:00Z)"
+  ],
+  "update_summary": "أضفت حقل last_reviewed وتحديث next_task; طبّقت خطوة 3 لتهيئة engine لاستخدام self.coordinator داخل _execute_step مع حفظ آليات fallback; أوصّي تشغيل اختبار شامل بعد الدمج للتأكد من عدم وجود انقطاعات في سلوك المحرك.",
+  "recent_reads": [
+    "project_management/COMMUNICATION/execution_logs.md",
+    "project_management/logs/detected_errors_20251211.md",
+    "project_management/logs/pytest_failures.txt",
+    "project_management/tasks/core/learning.py",
+    "data/experience/i-project/scripts/check_rules_compliance.py",
+    "data/experience/i-project/scripts/check_rules_validator.py",
+    "data/experience/i-project/scripts/check_system_integrity.py",
+    "data/experience/i-project/scripts/check_workflow_rules.py",
+    "data/experience/i-project/scripts/sandbox_runner.py",
+    "data/experience/i-project/scripts/run_in_sandbox.sh"
+  ],
+  "diagnosis": {
+    "summary": "Infrastructure and model integration diagnosis for Ollama and RAG",
+    "details": {
+      "ollama": "Ollama endpoints returned 404 or session-closed errors in runtime logs; likely causes: Ollama not running, mismatched API path (v1/generate vs /api/generate), or service instability.",
+      "rag": "RAG initialization failed: 'chromadb' vector store not available. Either install/enable chromadb or configure an available vector store.",
+      "rules": "`rules/architecture_rules.json` is present; earlier smoke failure was due to running from a different working directory. Confirm permanent placement under data/experience/i-project/rules or set working-dir when running scripts.",
+      "environment": "Some pytest/import issues were previously resolved by adjusting PYTHONPATH and installing missing deps; ensure `.venv` activation and consistent PYTHONPATH in CI and local runs."
+    }
+  },
+  "blockers": [
+    "Ollama service unreachable or API endpoint mismatch (causes model calls to 404/Session closed)",
+    "RAG vector store 'chromadb' not available in environment",
+    "Potential config path/type mismatch in `config/local_models.yaml` for logs or other paths (reported as a type error in integrity checks)"
+  ],
+  "recommended_actions": [
+    "Verify and start Ollama service locally (or update `OLLAMA_HOST`/API base in settings).",
+    "Either install `chromadb` into the environment or change RAG vector_store config to an available option.",
+    "Confirm `rules/architecture_rules.json` resides at `data/experience/i-project/rules/architecture_rules.json` or run smoke scripts from the i-project folder.",
+    "Fix central config path/type issues in `config/local_models.yaml` (logs path type); then re-run `check_system_integrity.py`.",
+    "After the above, run smoke checks and the semaphore test in order: `smoke_ollama.py`, `smoke_aider.py`, `test_ollama_semaphore.py`."
+  ],
+  "context_update_log": "Added recent_reads and bumped last_updated after scanning project_management and i-project scripts; performed live diagnosis for Ollama/RAG and recorded blockers & recommended actions. 2025-12-15T14:30Z: Read GOALS.md, STATE.json, AGENT_CONTEXT.json, seven_pole_agent.py, specialists/debugger.py, and knowledge patterns — updated local todo and created CONTEXT_LOG additions file. 2025-12-15T15:00Z: Issued directive to start building first project from INPUT/. 2025-12-15T15:25Z: Executed run_mission.py on hello_world sandbox; failed due to no tests, DebuggerSpecialist triggered dry-run diagnosis. 2025-12-15T15:35:00Z: Executed run_mission.py on multistack_debug_demo sandbox; failed with assertion error, DebuggerSpecialist correctly diagnosed and suggested patch (change * to + in add function). 2025-12-22T03:34:16.626849Z: Executed executive dry-run (`learning.py`) — result: success (repository/goals/state checks OK; no changes applied). 2025-12-22T12:10:10Z: Integrated `core/coordinator.py` and executed unit tests (3 passed). 2025-12-22T12:15:20Z: Patched `core/engine.py` and `core/graph.py` to route debug via `core/task_coordinator.TaskCoordinator`; dry-run executed and checks OK.",
+  "recent_tests": [
+    {
+      "name": "test_ollama_semaphore.py",
+      "path": "data/experience/i-project/scripts/test_ollama_semaphore.py",
+      "timestamp": "2025-12-15T13:30:00Z",
+      "summary": "Semaphore enforced concurrency: worker1 succeeded (~5s), workers 2-3 timed out waiting for semaphore (acquire timeout 3s).",
+      "interpretation": "Semaphore behaves as designed to limit concurrent Ollama calls; suggests safe concurrency limits for local Ollama usage.",
+      "result": "partial_success"
+    }
+  ],
+  "recent_runs": [
+    {
+      "name": "smoke_aider.py",
+      "path": "data/experience/i-project/scripts/smoke_aider.py",
+      "timestamp": "2025-12-22T17:55:20Z",
+      "result": "success",
+      "summary": "Basic Aider smoke checks passed (run 2025-12-22). Output: [aider smoke] OK — basic checks passed"
+    },
+    {
+      "name": "smoke_ollama.py",
+      "path": "data/experience/i-project/scripts/smoke_ollama.py",
+      "timestamp": "2025-12-22T17:47:20Z",
+      "result": "success",
+      "summary": "Basic Ollama smoke checks passed after repairing rules/architecture_rules.json. Output: [ollama smoke] OK — basic checks passed"
+    }
+  ],
+  "project_ultimate_goal": "Primary: Produce runnable projects in OUTPUT/ from INPUT/ descriptions. Secondary: develop and maintain a production-ready AI task-processing platform to enable and scale automation.",
+  "recommended_sequence": [
+    "Record decision to standardize on FastAPI in GOALS.md and STATE.json",
+    "Create/validate AGENT_CONTEXT.json (candidate) and CONTEXT_LOG.jsonl pre/post entries",
+    "Run a controlled dry-run of mithaly_management/tasks/core/learning.py with --dry-run and record results",
+    "Plan refactoring tasks to align Blueprint folders to Python/FastAPI structure"
+  ],
+  "note": "Explicit technical decision: standardize documentation and agents on FastAPI to avoid future Node.js suggestions. This is a candidate file — review before replacing active AGENT_CONTEXT.json.",
+  "last_change": "execute ds.agent"
+}

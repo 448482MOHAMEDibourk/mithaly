@@ -1,0 +1,7 @@
+{
+  "protocol_version": "1.0.0",
+  "project_name": "mithaly",
+  "project_type": "ai_platform",
+  "migrated_from": ["mithaly_management/", "project_management/"],
+  "migration_date": "2025-12-24"
+}

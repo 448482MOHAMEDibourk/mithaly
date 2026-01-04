@@ -1,0 +1,24 @@
+name: General Rules Guide
+
+on:
+  push:
+    paths:
+      - '.github/agents/mithaly_agent.agent.md'
+  pull_request:
+    paths:
+      - '.github/agents/mithaly_agent.agent.md'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Display guide
+        run: |
+          echo "Guide: workspace/mithaly/guides/07_general_rules.md"
+          sed -n '1,200p' workspace/mithaly/guides/07_general_rules.md || true
+      - name: Upload guide artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: general-rules-guide
+          path: workspace/mithaly/guides/07_general_rules.md
